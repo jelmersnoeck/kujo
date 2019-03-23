@@ -35,7 +35,11 @@ func TestJobSlice(t *testing.T) {
 				t.Errorf("Expected no error loading the resources, got '%s'", err)
 			}
 
-			sl := JobSlice(rs)
+			sl, err := JobSlice(rs)
+			if err != nil {
+				t.Errorf("Expected no error getting the job slice, got '%s'", err)
+			}
+
 			if len(sl) != tc.jobCount {
 				t.Errorf("Expected %d jobs, got %d", tc.jobCount, len(sl))
 			}
