@@ -20,7 +20,7 @@ func HashedConfig(uList []unstructured.Unstructured) (map[string]string, error) 
 				ns = "default"
 			}
 
-			key := fmt.Sprintf("%s/%s", ns, un.GetName())
+			key := fmt.Sprintf("%s/%s/%s", un.GetKind(), ns, un.GetName())
 			if _, ok := uMap[key]; !ok {
 				hsh, err := hashUnstructured(un)
 				if err != nil {

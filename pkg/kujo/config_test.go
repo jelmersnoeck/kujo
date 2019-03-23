@@ -24,20 +24,20 @@ func TestHashedConfig(t *testing.T) {
 		"with a configmap provided": {
 			fixture: "testdata/job-configmap.yaml",
 			config: map[string]string{
-				"default/perl-job-config": "6b01af86bab978c892006d41097f29c7b040d459e6613fad29293c1d2c624046",
+				"ConfigMap/default/perl-job-config": "6b01af86bab978c892006d41097f29c7b040d459e6613fad29293c1d2c624046",
 			},
 		},
 		"with a secret provided": {
 			fixture: "testdata/job-secret.yaml",
 			config: map[string]string{
-				"default/mysecret": "8ebf17fe046d11996943eee66edbe0a487cb0a7b75f34d3d469ab58649530fbd",
+				"Secret/default/mysecret": "8ebf17fe046d11996943eee66edbe0a487cb0a7b75f34d3d469ab58649530fbd",
 			},
 		},
 		"with configmap and secret provided": {
 			fixture: "testdata/full-config.yaml",
 			config: map[string]string{
-				"default/mysecret":        "8ebf17fe046d11996943eee66edbe0a487cb0a7b75f34d3d469ab58649530fbd",
-				"default/perl-job-config": "6b01af86bab978c892006d41097f29c7b040d459e6613fad29293c1d2c624046",
+				"Secret/default/mysecret":           "8ebf17fe046d11996943eee66edbe0a487cb0a7b75f34d3d469ab58649530fbd",
+				"ConfigMap/default/perl-job-config": "6b01af86bab978c892006d41097f29c7b040d459e6613fad29293c1d2c624046",
 			},
 		},
 	}
