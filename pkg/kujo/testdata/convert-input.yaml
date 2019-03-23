@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        env:
+        - name: secret-env
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: username
+      restartPolicy: Never
+      volumes:
+      - name: my-volume
+        configMap:
+          name: my-config
+  backoffLimit: 4
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: MWYyZDFlMmU2N2Rm
+---
+apiVersion: v1
+data:
+  job.data: |
+    my-config
+kind: ConfigMap
+metadata:
+  name: perl-job-config

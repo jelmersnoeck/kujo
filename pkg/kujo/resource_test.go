@@ -16,7 +16,7 @@ func TestResourcesFromReader(t *testing.T) {
 		},
 		"with a list of data": {
 			fixture:     "testdata/full-config.yaml",
-			resourceLen: 3,
+			resourceLen: 4,
 		},
 	}
 

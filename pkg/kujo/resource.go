@@ -20,9 +20,7 @@ func ResourcesFromReader(rdr io.Reader) ([]unstructured.Unstructured, error) {
 	for err == nil {
 		var un unstructured.Unstructured
 		if err = decoder.Decode(&un); err == nil {
-			if validObjectKind(un) {
-				result = append(result, un)
-			}
+			result = append(result, un)
 		}
 	}
 
@@ -39,6 +37,19 @@ var validObjectKinds = map[string][]string{
 	"Job":       []string{"batch/v1"},
 	"Secret":    []string{"v1"},
 	"ConfigMap": []string{"v1"},
+}
+
+func isJobResource(un unstructured.Unstructured) bool {
+	if un.GetKind() == "Job" {
+		unVersion := un.GetAPIVersion()
+		for _, version := range validObjectKinds["Job"] {
+			if version == unVersion {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 func validObjectKind(un unstructured.Unstructured) bool {

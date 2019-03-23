@@ -4,5 +4,8 @@ test:
 build:
 	go build -o bin/kujo .
 
+install:
+	go install .
+
 docker:
 	docker build -t kujo .
