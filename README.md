@@ -13,9 +13,53 @@ need to set up a system to remove old jobs so they can be mutated.
 ## Usage
 
 Usage is based on a piping system where Kujo expects data to be sent on stdin.
+To enable kujo on your jobs, make sure you set the annotations
+`kujo.sphc.io: true`. Jobs where this is not set up will be ignored.
 
 ```bash
-cat examples/job.yaml | kujo | kubectl apply -f -
+cat _examples/jobs.yaml | kujo
+```
+
+will output
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi-ignored
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - command:
+        - perl
+        - -Mbignum=bpi
+        - -wle
+        - print bpi(2000)
+        image: perl
+        name: pi
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    kujo.sphc.io: "true"
+  name: pi-unique-54ccg6m6hb
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - command:
+        - perl
+        - -Mbignum=bpi
+        - -wle
+        - print bpi(2000)
+        image: perl
+        name: pi
+      restartPolicy: Never
 ```
 
 ## Future plans

@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: pi
+  annotations:
+    kujo.sphc.io: "true"
 spec:
   template:
     spec:
@@ -20,6 +22,29 @@ spec:
         configMap:
           name: my-config
   backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi-ignored
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - env:
+        - name: secret-env
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: mysecret
+        image: perl
+        name: pi
+      restartPolicy: Never
+      volumes:
+      - configMap:
+          name: my-config
+        name: my-volume
 ---
 apiVersion: v1
 kind: Secret

@@ -16,7 +16,7 @@ import (
 func JobSlice(uList []unstructured.Unstructured) ([]v1.Job, error) {
 	var jobList []v1.Job
 	for _, un := range uList {
-		if un.GetKind() == "Job" && validObjectKind(un) {
+		if isJobResource(un) {
 			var job v1.Job
 			data, err := un.MarshalJSON()
 			if err != nil {

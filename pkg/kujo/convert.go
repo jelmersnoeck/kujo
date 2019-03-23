@@ -6,7 +6,7 @@ import (
 	"io"
 
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
@@ -41,10 +41,7 @@ func SuffixJobs(data io.Reader) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "Could not calculate job hashes")
 	}
-
-	var separator bool
-	buf := bytes.NewBuffer([]byte{})
-	for _, rs := range resourceList {
+	for i, rs := range resourceList {
 		if isJobResource(rs) {
 			ns := rs.GetNamespace()
 			if ns == "" {
@@ -53,10 +50,18 @@ func SuffixJobs(data io.Reader) ([]byte, error) {
 
 			key := fmt.Sprintf("%s/%s", ns, rs.GetName())
 			if hash, ok := jobHashes[key]; ok {
-				rs.SetName(fmt.Sprintf("%s-%s", rs.GetName(), hash))
+				resourceList[i].SetName(fmt.Sprintf("%s-%s", rs.GetName(), hash))
 			}
 		}
+	}
 
+	return marshalUnstructured(resourceList)
+}
+
+func marshalUnstructured(resourceList []unstructured.Unstructured) ([]byte, error) {
+	var separator bool
+	buf := bytes.NewBuffer([]byte{})
+	for _, rs := range resourceList {
 		out, err := yaml.Marshal(rs.Object)
 		if err != nil {
 			return nil, err
@@ -78,9 +83,4 @@ func SuffixJobs(data io.Reader) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
-}
-
-func marshalUnstructured(un []unstructured.Unstructured) ([]byte, error) {
-	ul := &unstructured.UnstructuredList{Items: un}
-	return ul.MarshalJSON()
 }

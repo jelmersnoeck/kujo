@@ -2,10 +2,14 @@ package kujo
 
 import (
 	"io"
+	"log"
+	"strconv"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/yaml"
 )
+
+const annKey = "kujo.sphc.io"
 
 // ResourcesFromReader takes a reader object and parses the data into a slice
 // of unstructured resources. The reader should either contain JSON or YAML
@@ -44,28 +48,17 @@ func isJobResource(un unstructured.Unstructured) bool {
 		unVersion := un.GetAPIVersion()
 		for _, version := range validObjectKinds["Job"] {
 			if version == unVersion {
-				return true
+				ann := un.GetAnnotations()
+				if val, ok := ann[annKey]; ok {
+					pb, err := strconv.ParseBool(val)
+					if err != nil {
+						log.Println(err)
+						return false
+					}
+
+					return pb
+				}
 			}
-		}
-	}
-
-	return false
-}
-
-func validObjectKind(un unstructured.Unstructured) bool {
-	if len(un.Object) == 0 {
-		return false
-	}
-
-	versions, ok := validObjectKinds[un.GetKind()]
-	if !ok {
-		return false
-	}
-
-	unVersion := un.GetAPIVersion()
-	for _, version := range versions {
-		if version == unVersion {
-			return true
 		}
 	}
 

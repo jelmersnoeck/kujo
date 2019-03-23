@@ -1,7 +1,6 @@
 package kujo
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -31,7 +30,6 @@ func TestConvert(t *testing.T) {
 	}
 
 	if string(fixture) != string(generated) {
-		fmt.Println(len(generated), len(fixture))
 		t.Errorf("Expected generated output\n%s\nto match fixture\n%s", string(generated), string(fixture))
 	}
 }
