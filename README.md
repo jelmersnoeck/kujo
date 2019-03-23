@@ -17,3 +17,12 @@ Usage is based on a piping system where Kujo expects data to be sent on stdin.
 ```bash
 cat examples/job.yaml | kujo | kubectl apply -f -
 ```
+
+## Future plans
+
+### Operator
+
+This behaviour would ideally live within an Operator where there is an
+abstraction layer on top of Kubernetes' Job Resource. The Operator itself would
+then take care of uniquely naming the individual Jobs, much like how the CronJob
+Resource works.
